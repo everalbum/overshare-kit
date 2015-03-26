@@ -269,10 +269,10 @@ static NSString * OSKActivitiesManagerPersistentExclusionsKey = @"OSKActivitiesM
     [sortedItems addObjectsFromArray:additionals];
     
     if (content.additionalItems) {
-        NSMutableSet *customContentItems = [NSMutableSet setWithArray:content.additionalItems];
+        NSMutableOrderedSet *customContentItems = [NSMutableOrderedSet orderedSetWithArray:content.additionalItems];
         [customContentItems minusSet:[NSSet setWithArray:sortedItems]];
         if (customContentItems.count) {
-            [sortedItems addObjectsFromArray:customContentItems.allObjects];
+            [sortedItems addObjectsFromArray:customContentItems.array];
         }
     }
 
