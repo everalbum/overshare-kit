@@ -194,10 +194,17 @@ static NSString * OSKActivitiesManagerPersistentExclusionsKey = @"OSKActivitiesM
             if ([[activityClass supportedContentItemType] isEqualToString:item.itemType]) {
                 NSString *type = [activityClass activityType];
                 if ([excludedActivityTypes containsObject:type] == NO) {
-                    if ((requireOperations && [activityClass canPerformViaOperation]) || requireOperations == NO) {
-                        OSKActivity *activity = [[activityClass alloc] initWithContentItem:item];
-                        if (activity) {
-                            [validActivities addObject:activity];
+                    if ([self validActivityForType:item.itemType
+                                             class:activityClass
+                                     excludedTypes:excludedActivityTypes
+                                 requireOperations:requireOperations
+                                              item:item])
+                    {
+                        if ((requireOperations && [activityClass canPerformViaOperation]) || requireOperations == NO) {
+                            OSKActivity *activity = [[activityClass alloc] initWithContentItem:item];
+                            if (activity) {
+                                [validActivities addObject:activity];
+                            }
                         }
                     }
                 }
