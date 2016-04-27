@@ -100,7 +100,7 @@ static CGFloat OSKActivitySheetViewControllerCollectionViewHeight_ThreeRows_Pad 
         self.customTopView.translatesAutoresizingMaskIntoConstraints = NO;
 
         [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[customView]|" options:@[] metrics:nil views:@{@"customView": self.customTopView}]];
-        [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[customView(==70)]" options:@[] metrics:nil views:@{@"customView": self.customTopView}]];
+        [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[customView(==100)]" options:@[] metrics:nil views:@{@"customView": self.customTopView}]];
     }
 }
 
@@ -121,7 +121,7 @@ static CGFloat OSKActivitySheetViewControllerCollectionViewHeight_ThreeRows_Pad 
 
 - (void)osk_updateLayout {
 
-    CGFloat additionalTopViewHeight = self.customTopView ? 40.0 : 0.0;
+    CGFloat additionalTopViewHeight = self.customTopView ? 60.0 : 0.0;
 
     if (self.usePopoverLayout) {
         self.topShadowLine.hidden = YES;
