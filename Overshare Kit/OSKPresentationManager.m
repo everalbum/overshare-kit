@@ -39,6 +39,7 @@
 
 NSString * const OSKPresentationOption_ActivityCompletionHandler = @"OSKPresentationOption_ActivityCompletionHandler";
 NSString * const OSKPresentationOption_PresentationEndingHandler = @"OSKPresentationOption_PresentationEndingHandler";
+NSString * const OSKPresentationOption_CustomTopViewProvider = @"OSKPresentationOption_CustomTopViewProvider";
 
 static CGFloat OSKPresentationManagerActivitySheetPresentationDuration = 0.33f;
 static CGFloat OSKPresentationManagerActivitySheetDismissalDuration = 0.16f;
@@ -101,7 +102,8 @@ static NSInteger OSKTextViewFontSize_Pad = 20.0f;
     activities = [manager validActivitiesForContent:content options:options];
     
     OSKSession *session = [[OSKSession alloc] initWithPresentationEndingHandler:options[OSKPresentationOption_PresentationEndingHandler]
-                                                      activityCompletionHandler:options[OSKPresentationOption_ActivityCompletionHandler]];
+                                                      activityCompletionHandler:options[OSKPresentationOption_ActivityCompletionHandler]
+                                                          customTopViewProvider:options[OSKPresentationOption_CustomTopViewProvider]];
     OSKActivitySheetViewController *sheet = nil;
     sheet = [[OSKActivitySheetViewController alloc] initWithSession:session activities:activities delegate:self usePopoverLayout:NO];
     [sheet setTitle:content.title];
@@ -123,7 +125,8 @@ static NSInteger OSKTextViewFontSize_Pad = 20.0f;
     activities = [manager validActivitiesForContent:content options:options];
     
     OSKSession *session = [[OSKSession alloc] initWithPresentationEndingHandler:options[OSKPresentationOption_PresentationEndingHandler]
-                                                      activityCompletionHandler:options[OSKPresentationOption_ActivityCompletionHandler]];
+                                                      activityCompletionHandler:options[OSKPresentationOption_ActivityCompletionHandler]
+                                                          customTopViewProvider:options[OSKPresentationOption_CustomTopViewProvider]];
     
     OSKActivitySheetViewController *sheet = nil;
     sheet = [[OSKActivitySheetViewController alloc] initWithSession:session activities:activities delegate:self usePopoverLayout:YES];
@@ -153,7 +156,8 @@ static NSInteger OSKTextViewFontSize_Pad = 20.0f;
     activities = [manager validActivitiesForContent:content options:options];
     
     OSKSession *session = [[OSKSession alloc] initWithPresentationEndingHandler:options[OSKPresentationOption_PresentationEndingHandler]
-                                                      activityCompletionHandler:options[OSKPresentationOption_ActivityCompletionHandler]];
+                                                      activityCompletionHandler:options[OSKPresentationOption_ActivityCompletionHandler]
+                                                          customTopViewProvider:options[OSKPresentationOption_CustomTopViewProvider]];
     
     OSKActivitySheetViewController *sheet = nil;
     sheet = [[OSKActivitySheetViewController alloc] initWithSession:session activities:activities delegate:self usePopoverLayout:YES];
@@ -286,7 +290,8 @@ static NSInteger OSKTextViewFontSize_Pad = 20.0f;
                                  options:(NSDictionary *)options {
     
     OSKSession *session = [[OSKSession alloc] initWithPresentationEndingHandler:options[OSKPresentationOption_PresentationEndingHandler]
-                                                      activityCompletionHandler:options[OSKPresentationOption_ActivityCompletionHandler]];
+                                                      activityCompletionHandler:options[OSKPresentationOption_ActivityCompletionHandler]
+                                                          customTopViewProvider:options[OSKPresentationOption_CustomTopViewProvider]];
     [self _proceedWithSession:session
              selectedActivity:activity
      presentingViewController:presentingViewController

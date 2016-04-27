@@ -37,6 +37,8 @@ extern NSString * const OSKPresentationOption_ActivityCompletionHandler;
  */
 extern NSString * const OSKPresentationOption_PresentationEndingHandler;
 
+extern NSString * const OSKPresentationOption_CustomTopViewProvider;
+
 ///-----------------------------------------------
 /// @name Presentation Manager
 ///-----------------------------------------------

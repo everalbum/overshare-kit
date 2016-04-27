@@ -54,6 +54,8 @@ static CGFloat OSKActivitySheetViewControllerCollectionViewHeight_ThreeRows_Pad 
 @property (assign, nonatomic) BOOL hidePageControl;
 @property (assign, nonatomic) BOOL usePopoverLayout;
 
+@property (nonatomic, strong) UIView *customTopView;
+
 @end
 
 @implementation OSKActivitySheetViewController
@@ -88,6 +90,18 @@ static CGFloat OSKActivitySheetViewControllerCollectionViewHeight_ThreeRows_Pad 
     [self setupLocalizationAndAccessibility];
     [self.collectionViewController.collectionView setClipsToBounds:NO];
     [self.collectionViewContainer setClipsToBounds:NO];
+
+    self.customTopView = self.session.customTopViewProvider();
+
+    if (self.customTopView) {
+        self.titleLabel.hidden = YES;
+
+        [self.sheetContainerView addSubview:self.customTopView];
+        self.customTopView.translatesAutoresizingMaskIntoConstraints = NO;
+
+        [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[customView]|" options:@[] metrics:nil views:@{@"customView": self.customTopView}]];
+        [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[customView(==70)]" options:@[] metrics:nil views:@{@"customView": self.customTopView}]];
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -106,6 +120,9 @@ static CGFloat OSKActivitySheetViewControllerCollectionViewHeight_ThreeRows_Pad 
 }
 
 - (void)osk_updateLayout {
+
+    CGFloat additionalTopViewHeight = self.customTopView ? 40.0 : 0.0;
+
     if (self.usePopoverLayout) {
         self.topShadowLine.hidden = YES;
         self.cancelButton.hidden = YES;
@@ -124,12 +141,15 @@ static CGFloat OSKActivitySheetViewControllerCollectionViewHeight_ThreeRows_Pad 
     else {
         CGFloat targetSheetHeight = [self visibleSheetHeightForCurrentLayout];
         CGRect sheetFrame = self.sheetContainerView.frame;
-        sheetFrame.size.height = targetSheetHeight;
-        sheetFrame.origin.y = self.view.bounds.size.height - targetSheetHeight;
+        sheetFrame.origin.y = self.view.bounds.size.height - targetSheetHeight - additionalTopViewHeight;
+        sheetFrame.size.height = targetSheetHeight + additionalTopViewHeight;
         [self.sheetContainerView setFrame:sheetFrame];
         
         CGRect collectionViewContainerFrame = self.collectionViewContainer.frame;
         collectionViewContainerFrame.size.height = [self collectionViewHeightForCurrentLayout];
+
+        CGFloat y = sheetFrame.size.height - collectionViewContainerFrame.size.height - self.cancelButton.bounds.size.height;
+        collectionViewContainerFrame.origin.y = y;
         [self.collectionViewContainer setFrame:collectionViewContainerFrame];
         
         CGRect cancellationViewFrame = self.cancellationView.frame;

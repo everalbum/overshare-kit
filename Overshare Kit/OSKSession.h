@@ -17,6 +17,8 @@ typedef NS_ENUM(NSInteger, OSKPresentationEnding) {
 
 typedef void(^OSKPresentationEndingHandler)(OSKPresentationEnding presentationEnding, OSKActivity *activityOrNil);
 
+typedef UIView* (^OSKPresentationTopViewProvider)();
+
 /**
  Represents a single sharing "session," i.e., the series of events beginning with the presentation
  of an activity sheet and ending with either a) an activity being performed successully, b) an
@@ -62,11 +64,14 @@ typedef void(^OSKPresentationEndingHandler)(OSKPresentationEnding presentationEn
  */
 @property (copy, nonatomic, readonly) OSKActivityCompletionHandler activityCompletionHandler;
 
+@property (copy, nonatomic, readonly) OSKPresentationTopViewProvider customTopViewProvider;
+
 /**
  The designated initializer.
  */
 - (instancetype)initWithPresentationEndingHandler:(OSKPresentationEndingHandler)endingHandler
-                        activityCompletionHandler:(OSKActivityCompletionHandler)activityHandler;
+                        activityCompletionHandler:(OSKActivityCompletionHandler)activityHandler
+                            customTopViewProvider:(OSKPresentationTopViewProvider)customTopViewProvider;
 
 @end
 

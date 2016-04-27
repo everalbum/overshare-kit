@@ -15,12 +15,14 @@ NSString * const OSKActivityOption_ActivityCompletionHandler = @"OSKActivityOpti
 @implementation OSKSession
 
 - (instancetype)initWithPresentationEndingHandler:(OSKPresentationEndingHandler)endingHandler
-                        activityCompletionHandler:(OSKActivityCompletionHandler)activityHandler {
+                        activityCompletionHandler:(OSKActivityCompletionHandler)activityHandler
+                            customTopViewProvider:(OSKPresentationTopViewProvider)customTopViewProvider {
     self = [super init];
     if (self) {
         _sessionIdentifier = [NSString osk_stringWithNewUUID];
         _presentationEndingHandler = [endingHandler copy];
         _activityCompletionHandler = [activityHandler copy];
+        _customTopViewProvider = [customTopViewProvider copy];
     }
     return self;
 }
