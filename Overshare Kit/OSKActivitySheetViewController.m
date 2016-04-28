@@ -55,6 +55,8 @@ static CGFloat OSKActivitySheetViewControllerCollectionViewHeight_ThreeRows_Pad 
 @property (assign, nonatomic) BOOL usePopoverLayout;
 
 @property (nonatomic, strong) UIView *customTopView;
+@property (nonatomic) CGFloat customTopViewHeight;
+@property (nonatomic) CGFloat additionalTopViewHeight;
 
 @end
 
@@ -71,6 +73,7 @@ static CGFloat OSKActivitySheetViewControllerCollectionViewHeight_ThreeRows_Pad 
         _delegate = delegate;
         _activities = activities.copy;
         _usePopoverLayout = usePopoverLayout;
+        _customTopViewHeight = 135;
     }
     return self;
 }
@@ -100,7 +103,12 @@ static CGFloat OSKActivitySheetViewControllerCollectionViewHeight_ThreeRows_Pad 
         self.customTopView.translatesAutoresizingMaskIntoConstraints = NO;
 
         [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[customView]|" options:@[] metrics:nil views:@{@"customView": self.customTopView}]];
-        [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[customView(==100)]" options:@[] metrics:nil views:@{@"customView": self.customTopView}]];
+
+        NSString *verticalFormat = [NSString stringWithFormat:@"V:|[customView(==%@)]", @(self.customTopViewHeight)];
+        [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:verticalFormat options:@[] metrics:nil views:@{@"customView": self.customTopView}]];
+
+        // Magic numbers that make my brain hurt :(
+        self.additionalTopViewHeight = (self.customTopViewHeight) - (40 + self.view.layoutMargins.top * 2);
     }
 }
 
@@ -121,8 +129,6 @@ static CGFloat OSKActivitySheetViewControllerCollectionViewHeight_ThreeRows_Pad 
 
 - (void)osk_updateLayout {
 
-    CGFloat additionalTopViewHeight = self.customTopView ? 60.0 : 0.0;
-
     if (self.usePopoverLayout) {
         self.topShadowLine.hidden = YES;
         self.cancelButton.hidden = YES;
@@ -131,6 +137,8 @@ static CGFloat OSKActivitySheetViewControllerCollectionViewHeight_ThreeRows_Pad 
         [self.sheetContainerView setFrame:self.view.bounds];
         
         CGRect collectionViewContainerFrame = self.collectionViewContainer.frame;
+        CGFloat y = self.customTopView ? self.customTopViewHeight + 16 : self.collectionViewContainer.frame.origin.y;
+        collectionViewContainerFrame.origin.y = y;
         collectionViewContainerFrame.size.height = [self collectionViewHeightForCurrentLayout];
         [self.collectionViewContainer setFrame:collectionViewContainerFrame];
         
@@ -141,14 +149,13 @@ static CGFloat OSKActivitySheetViewControllerCollectionViewHeight_ThreeRows_Pad 
     else {
         CGFloat targetSheetHeight = [self visibleSheetHeightForCurrentLayout];
         CGRect sheetFrame = self.sheetContainerView.frame;
-        sheetFrame.origin.y = self.view.bounds.size.height - targetSheetHeight - additionalTopViewHeight;
-        sheetFrame.size.height = targetSheetHeight + additionalTopViewHeight;
+        sheetFrame.size.height = targetSheetHeight + self.additionalTopViewHeight;
         [self.sheetContainerView setFrame:sheetFrame];
         
         CGRect collectionViewContainerFrame = self.collectionViewContainer.frame;
         collectionViewContainerFrame.size.height = [self collectionViewHeightForCurrentLayout];
 
-        CGFloat y = sheetFrame.size.height - collectionViewContainerFrame.size.height - self.cancelButton.bounds.size.height;
+        CGFloat y = self.customTopView ? self.customTopViewHeight + 16 : self.collectionViewContainer.frame.origin.y;
         collectionViewContainerFrame.origin.y = y;
         [self.collectionViewContainer setFrame:collectionViewContainerFrame];
         
@@ -227,7 +234,9 @@ static CGFloat OSKActivitySheetViewControllerCollectionViewHeight_ThreeRows_Pad 
 
 - (CGSize)preferredContentSize {
     CGFloat width = (self.usePopoverLayout) ? 384.0f : 320.0f;
-    return CGSizeMake(width, [self visibleSheetHeightForCurrentLayout]);
+    CGFloat baseHeight = [self visibleSheetHeightForCurrentLayout];
+    CGFloat height = (self.usePopoverLayout) ? baseHeight + self.additionalTopViewHeight : baseHeight;
+    return CGSizeMake(width, height);
 }
 
 - (CGFloat)visibleSheetHeightForCurrentLayout {
