@@ -73,7 +73,7 @@ static CGFloat OSKActivitySheetViewControllerCollectionViewHeight_ThreeRows_Pad 
         _delegate = delegate;
         _activities = activities.copy;
         _usePopoverLayout = usePopoverLayout;
-        _customTopViewHeight = 135;
+        _customTopViewHeight = 160;
     }
     return self;
 }
@@ -150,6 +150,7 @@ static CGFloat OSKActivitySheetViewControllerCollectionViewHeight_ThreeRows_Pad 
         CGFloat targetSheetHeight = [self visibleSheetHeightForCurrentLayout];
         CGRect sheetFrame = self.sheetContainerView.frame;
         sheetFrame.size.height = targetSheetHeight + self.additionalTopViewHeight;
+        sheetFrame.origin.y = self.view.bounds.size.height - sheetFrame.size.height;
         [self.sheetContainerView setFrame:sheetFrame];
         
         CGRect collectionViewContainerFrame = self.collectionViewContainer.frame;
@@ -359,7 +360,7 @@ static CGFloat OSKActivitySheetViewControllerCollectionViewHeight_ThreeRows_Pad 
         rows = actualRows;
     }
     
-    return rows;
+    return MIN(2, rows); // maximum of two rows for the share sheet
 }
 
 - (IBAction)cancelButtonPressed:(id)sender {
